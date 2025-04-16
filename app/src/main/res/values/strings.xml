@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AulaFood</string>
+    <string name="title_activity_into">IntoActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_cadastro">CadastroActivity</string>
+    <string name="title_activity_document">DocumentActivity</string>
+    <string name="title_activity_multi_file_upload_main">MultiFileUploadMainActivity</string>
+</resources>
