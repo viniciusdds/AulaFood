@@ -23,6 +23,8 @@ import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.asRequestBody
+import org.json.JSONArray
+import android.util.Log
 import java.io.*
 
 class MultipleImagesActivity : ComponentActivity() {
@@ -117,6 +119,7 @@ fun EnvioImagensMultiplasScreen() {
                 mensagem = "Nenhuma imagem selecionada"
             } else {
                 enviarMultiplasImagens(arquivosInput) { resposta ->
+                    Log.d("UPLOAD_RESPOSTA", resposta)
                     mensagem = resposta
                 }
             }
@@ -158,7 +161,7 @@ fun enviarMultiplasImagens(
     }
 
     val request = Request.Builder()
-        .url("https://clients.eadiaurora.com.br/MyCMS/clienteAG/api_teste.php") // ajuste conforme necessário
+        .url("https://clients.eadiaurora.com.br/MyCMS/clienteAG/api_teste.php")
         .post(builder.build())
         .build()
 
@@ -166,8 +169,16 @@ fun enviarMultiplasImagens(
         try {
             val response = client.newCall(request).execute()
             val resposta = response.body?.string() ?: "Resposta vazia"
+            val mensagens = try {
+                JSONArray(resposta).let { array ->
+                    (0 until array.length()).joinToString("\n") { i -> array.getString(i) }
+                }
+            } catch (e: Exception) {
+                resposta
+            }
+
             withContext(Dispatchers.Main) {
-                callback(resposta)
+                callback(mensagens)
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
@@ -176,3 +187,4 @@ fun enviarMultiplasImagens(
         }
     }
 }
+
